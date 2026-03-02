@@ -1,11 +1,13 @@
 'use client'
 
 import { useState, useCallback } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { Card, CardContent } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useToast } from '@/components/ui/use-toast'
-import { ArrowLeftRight, FileText } from 'lucide-react'
+import { ArrowLeftRight, FileText, Link2 } from 'lucide-react'
+import ProviderConnectionsTab from '@/components/import/ProviderConnectionsTab'
 
 // Bank file import components
 import BankFileUploadStep from '@/components/import/BankFileUploadStep'
@@ -545,18 +547,23 @@ function SIEImportWizard() {
 // ============================================================
 
 export default function ImportPage() {
+  const searchParams = useSearchParams()
+  const tabParam = searchParams.get('tab')
+  const initialTab = tabParam === 'providers' || tabParam === 'sie' ? tabParam : 'bank'
+  const [activeTab, setActiveTab] = useState(initialTab)
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Importera</h1>
         <p className="text-muted-foreground">
-          Importera banktransaktioner eller bokföringsdata till ditt företag
+          Importera banktransaktioner, bokföringsdata eller anslut ditt bokföringssystem
         </p>
       </div>
 
       {/* Tabbed layout */}
-      <Tabs defaultValue="bank" className="space-y-6">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList>
           <TabsTrigger value="bank">
             <ArrowLeftRight className="mr-2 h-4 w-4" />
@@ -566,6 +573,10 @@ export default function ImportPage() {
             <FileText className="mr-2 h-4 w-4" />
             Bokföringsdata (SIE)
           </TabsTrigger>
+          <TabsTrigger value="providers">
+            <Link2 className="mr-2 h-4 w-4" />
+            Bokföringssystem
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="bank">
@@ -574,6 +585,10 @@ export default function ImportPage() {
 
         <TabsContent value="sie">
           <SIEImportWizard />
+        </TabsContent>
+
+        <TabsContent value="providers">
+          <ProviderConnectionsTab />
         </TabsContent>
       </Tabs>
     </div>

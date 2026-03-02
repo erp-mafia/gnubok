@@ -23,6 +23,10 @@
     {
       "path": "/api/documents/verify/cron",
       "schedule": "0 3 * * 0"
+    },
+    {
+      "path": "/api/connections/sync/cron",
+      "schedule": "30 5 * * *"
     }
   ]
 }

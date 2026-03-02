@@ -530,3 +530,41 @@ export const PaginationQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(50),
   offset: z.coerce.number().int().nonnegative().default(0),
 })
+
+// ============================================================
+// Provider connection schemas
+// ============================================================
+
+export const AccountingProviderSchema = z.enum([
+  'fortnox', 'visma', 'briox', 'bokio', 'bjorn_lunden',
+])
+
+export const InitiateOAuthSchema = z.object({
+  provider: z.enum(['fortnox', 'visma']),
+})
+
+export const ConnectBrioxSchema = z.object({
+  provider: z.literal('briox'),
+  application_token: z.string().min(1, 'Application token is required'),
+})
+
+export const ConnectBokioSchema = z.object({
+  provider: z.literal('bokio'),
+  api_key: z.string().min(1, 'API key is required'),
+  company_id: z.string().min(1, 'Company ID is required'),
+})
+
+export const ConnectBjornLundenSchema = z.object({
+  provider: z.literal('bjorn_lunden'),
+  company_key: z.string().uuid('Company key must be a valid UUID'),
+})
+
+export const ConnectProviderSchema = z.discriminatedUnion('provider', [
+  ConnectBrioxSchema,
+  ConnectBokioSchema,
+  ConnectBjornLundenSchema,
+])
+
+export const SyncDataRequestSchema = z.object({
+  financialYear: z.number().int().min(0).max(5),
+})
