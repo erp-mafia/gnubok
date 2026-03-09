@@ -47,6 +47,9 @@ supabase/.temp/
 # claude local settings
 .claude/settings.local.json
 
+# dev docs (internal reference, not published)
+/dev_docs
+
 # Extension registry (auto-generated but defaults are committed)
 # Run `npm run setup:extensions` to regenerate after changing extensions.config.json
 # The empty defaults in lib/extensions/_generated/ are committed so core compiles
