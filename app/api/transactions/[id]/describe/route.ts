@@ -5,9 +5,29 @@ import { validateBody } from '@/lib/api/validate'
 import { DescribeTransactionSchema } from '@/lib/api/schemas'
 import { extensionRegistry } from '@/lib/extensions/registry'
 import { findMatchingTemplates, type TemplateMatch } from '@/lib/bookkeeping/booking-templates'
-import type { Transaction, EntityType } from '@/types'
+import type { Transaction, EntityType, VatTreatment } from '@/types'
 import type { Extension } from '@/lib/extensions/types'
-import type { DescriptionAnalysisInput, DescriptionAnalysisResult } from '@/extensions/general/ai-categorization/lib/description-analyzer'
+
+interface DescriptionAnalysisInput {
+  description: string
+  transactionAmount: number
+  transactionDate: string
+  transactionDescription: string
+  merchantName: string | null
+  currency: string
+  entityType: EntityType
+}
+
+interface DescriptionAnalysisResult {
+  debitAccount: string
+  creditAccount: string
+  vatTreatment: VatTreatment | null
+  category: string
+  confidence: number
+  reasoning: string
+  warnings: string[]
+  templateId: string | null
+}
 
 ensureInitialized()
 
