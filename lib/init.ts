@@ -30,12 +30,11 @@ const OPTIONAL_VARS = [
 ] as const
 
 function validateEnvironment(): void {
-  // During Docker builds, NEXT_PUBLIC_* vars are placeholder sentinels
-  // replaced at runtime by docker-entrypoint.sh. Server-only vars like
-  // SUPABASE_SERVICE_ROLE_KEY are not available at build time at all.
-  // Skip validation so Next.js page collection doesn't fail.
-  const isBuildPlaceholder = process.env.NEXT_PUBLIC_SUPABASE_URL?.startsWith('__')
-  if (isBuildPlaceholder) return
+  // During builds (CI, Docker, Vercel), env vars may be absent or set to
+  // placeholder sentinels. Skip validation so Next.js page collection
+  // doesn't fail — real validation happens at runtime.
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  if (!supabaseUrl || supabaseUrl.startsWith('__')) return
 
   const missing: string[] = []
 
